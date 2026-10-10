@@ -7,8 +7,9 @@ from pathlib import Path
 HERE = Path(__file__).parent
 SLIDES = HERE / 'deck' / 'project' / 'slides'
 ASSETS = HERE / 'artifact-files' / '9ef22c93-143c-4fb9-ad28-bb923d12db4d'
-for name, blob in [('result_167.png', 'b04d6c7c01d935e067a407bf470825cd'), ('demo_clip.mp4', 'acce233cd23ae69ecf17f2793204a0ad'),
-                   ('demo_still.png', 'cd5bedfa8bc7415cdbb3476bf1a6f20a'), ('app_now.png', '73fdab005252411599013380dc437f3b')]:
+for name, blob in [('result_167.png', 'b04d6c7c01d935e067a407bf470825cd'), ('app_demo.mp4', '1b359124b30662b15b84e2274b0b3bd6'),
+                   ('app_demo_still.jpg', '020501866eb83f4c06d7d9150c3c5b34'),
+                   ('app_now.png', '73fdab005252411599013380dc437f3b')]:
     shutil.copy(HERE / 'deckcheck' / name, ASSETS / (blob + Path(name).suffix))
 
 INK, PAPER, ACCENT, AMBER, GREY, LINE, MUTED = '#152238', '#F6F4EE', '#C2570C', '#F2A65A', '#9AA3AF', '#DAD6CB', '#4A5568'
@@ -145,7 +146,7 @@ weight = section('weight', f'''
 <p style="font-size:24px;line-height:1.45;color:{MUTED}">คอลัมน์: แบ่งค่า H ที่ 7 และ 12 นิ้ว (18 และ 30 ซม.)</p>
 </div>
 </div>
-''', f'ตารางจาก{TEACHER} ตัวเลขตรงกับ Lifting Calculator ของรัฐวอชิงตัน (หน่วยปอนด์ แปลงเป็นกิโลกรัม) · ข้อ 2 กลุ่มเพิ่มเอง', gap=28)
+''', 'ตาราง: แบบประเมินความเสี่ยงงานยกเคลื่อนย้าย (จันจิราภรณ์ วิชัย และ สุนิสา ชายเกลี้ยง, วารสารวิจัย มข. 2557; 19(5): 708–719) · ข้อ 2 กลุ่มเพิ่มเอง', gap=28)
 (SLIDES / 'weight.html').write_text(weight, encoding='utf-8', newline='\n')
 
 # ------------------------------------------------------------------ slide 7: defaults and where they come from
@@ -154,41 +155,44 @@ ROWS = [
     ('ช่วงยืนตรงเพื่อตั้งสเกล', '1.5 วินาที', TEACHER, 'คงเดิม'),
     ('มุมมองกล้อง', '70°', 'กล้องมือถือทั่วไป 65–75°', 'คงเดิม ลอง 50–110° ผลแทบไม่เปลี่ยน'),
     ('ตำแหน่งเอว ระหว่างสะโพกกับไหล่', '0.30', TEACHER, 'คงเดิม โซนต้นทางถูก 16 จาก 16 คลิป'),
+    ('ตารางน้ำหนัก และช่วงระยะเอื้อม', '3×4 ช่อง แบ่งที่ 7, 12 นิ้ว', 'แบบประเมินงานยก', 'คงเดิม'),
     ('ระยะเอื้อมที่ยอมรับ', 'ไม่จำกัด', TEACHER, '<b>ตัดเฟรมที่เกิน 50% ของส่วนสูง</b>'),
-    ('เกณฑ์เตือนบิดตัว', '45°', TEACHER, '<b>17° หรือแนวไหล่หมุน 50°</b> จับได้ 1 → 11 จาก 13'),
+    ('เกณฑ์เตือนบิดตัว', '45°', 'แบบประเมินงานยก', '<b>17° หรือแนวไหล่หมุน 50°</b> จับได้ 1 → 11 จาก 13'),
     ('ตัวนับรอบ', 'ป้าย "ยก" ติดกัน 6 เฟรม', TEACHER, '<b>มือห่างระดับยืนนิ่ง 12 ซม. + โมเดลยืนยัน 20%</b> ถูก 10 จาก 20 → 22 จาก 22'),
     ('โมเดลกิจกรรม', 'LSTM 30 เฟรม 132 ค่า', 'ค่าเดิมของ Workshop 12', '<b>Transformer 60 เฟรม 166 ค่า</b> คะแนน 0.35 → 0.42'),
 ]
 rows = ''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td></tr>' for a, b, c, d in ROWS)
 defaults = section('tuning', f'''
-{header('ค่าตั้งต้นและที่มา', 'คงไว้ 4 ค่า ปรับ 4 ค่า จากการทดลองกับคลิปจริง')}
+{header('ค่าตั้งต้นและที่มา', 'คงไว้ 5 ค่า ปรับ 4 ค่า จากการทดลองกับคลิปจริง')}
 <table style="font-size:24px;color:{INK};background:#FFFFFF;border:1px solid {LINE};border-radius:20px">
 <tr style="background:{INK}"><th style="width:25%;text-align:left;color:{PAPER};font-weight:600">ค่า</th><th style="width:19%;text-align:left;color:{PAPER};font-weight:600">ค่าตั้งต้น</th><th style="width:20%;text-align:left;color:{PAPER};font-weight:600">ที่มา</th><th style="width:36%;text-align:left;color:{PAPER};font-weight:600">ค่าที่กลุ่มใช้ และผล</th></tr>
 {rows}
 </table>
-''', 'ทดลองกับ 22 คลิปของกลุ่ม (20 คลิปเดิม + 2 คลิปยกหลายรอบ) · เกณฑ์บิดตัวใช้ 36 คลิป รวมของกลุ่มอื่น · คะแนนโมเดล = macro-F1 ชุดตรวจสอบ', gap=28)
+''', 'ทดลองกับ 22 คลิปของกลุ่ม (20 คลิปเดิม + 2 คลิปยกหลายรอบ) · เกณฑ์บิดตัวใช้ 36 คลิป รวมคลิปทดสอบเพิ่มเติม · คะแนนโมเดล = macro-F1 ชุดตรวจสอบ', gap=28)
 (SLIDES / 'tuning.html').write_text(defaults, encoding='utf-8', newline='\n')
 
 # ------------------------------------------------------------------ slide 12: demo
 def demo_step(number, title, text):
-    return f'''<div style="display:flex;gap:24px;padding:26px 32px;{CARD}">
-<p style="{HEAD};font-size:56px;font-weight:600;line-height:1;color:{ACCENT};width:52px">{number}</p>
+    return f'''<div style="display:flex;gap:20px;padding:24px 28px;{CARD}">
+<p style="{HEAD};font-size:52px;font-weight:600;line-height:1;color:{ACCENT};width:44px">{number}</p>
 <div style="flex:1;display:flex;flex-direction:column;gap:6px">
-<h3 style="font-size:32px;font-weight:600;line-height:1.3">{title}</h3>
-<p style="font-size:26px;line-height:1.45;color:{MUTED}">{text}</p>
+<h3 style="font-size:30px;font-weight:600;line-height:1.3">{title}</h3>
+<p style="font-size:25px;line-height:1.45;color:{MUTED}">{text}</p>
 </div>
 </div>'''
 
 
 demo = section('demo', f'''
-<img src="/_blob/cd5bedfa8bc7415cdbb3476bf1a6f20a" data-video="/_blob/acce233cd23ae69ecf17f2793204a0ad" alt="คลิปผลลัพธ์ของคลิปยกเร็ว: โครงร่างของผู้ยก ตารางน้ำหนัก และตัวนับรอบที่เพิ่มขึ้นทีละรอบ" style="position:absolute;right:128px;top:128px;width:450px;height:800px;object-fit:cover;border-radius:20px">
-{header('สาธิตการใช้งาน', 'จากคลิปหนึ่งคลิป ถึงผลสรุปรายรอบ', ';width:1130px')}
-<div style="display:flex;flex-direction:column;gap:20px;width:1130px">
-{demo_step(1, 'เลือกคลิป กรอกส่วนสูงและน้ำหนักของที่ยก', 'ใช้ไฟล์วิดีโอ หรือกล้องสดของเครื่องก็ได้')}
-{demo_step(2, 'กดวิเคราะห์ แล้วดูภาพขณะประมวลผล', 'เห็นโครงร่าง ตารางน้ำหนัก และตัวนับที่ขึ้นเมื่อจบแต่ละรอบ')}
-{demo_step(3, 'อ่านผลสรุป หนึ่งแถวต่อหนึ่งรอบ', 'ท่าที่แย่ที่สุดของรอบ น้ำหนักสูงสุด และแถบเตือนเมื่อน้ำหนักหรือการบิดตัวเกินเกณฑ์')}
+{header('สาธิตการใช้งาน', 'จากคลิปหนึ่งคลิป ถึงผลสรุปรายรอบ')}
+<div style="display:flex;align-items:stretch;gap:32px">
+<img src="/_blob/020501866eb83f4c06d7d9150c3c5b34" data-video="/_blob/1b359124b30662b15b84e2274b0b3bd6" alt="วิดีโอสาธิตเว็บแอป: เลือกคลิปตัวอย่าง กรอกส่วนสูง กดวิเคราะห์ เห็นภาพผลลัพธ์ขยับระหว่างประมวลผล แล้วได้หน้าสรุปผลพร้อมตารางรายรอบและเส้นเวลา" style="width:940px;height:604px;object-fit:contain;background:#0E1117;border-radius:20px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+{demo_step(1, 'เลือกคลิป กรอกส่วนสูง', 'ใช้ไฟล์วิดีโอ หรือกล้องสดของเครื่องก็ได้')}
+{demo_step(2, 'กดวิเคราะห์', 'เห็นโครงร่าง ตารางน้ำหนัก และตัวนับ ขณะประมวลผล')}
+{demo_step(3, 'อ่านผลสรุปรายรอบ', 'ท่าที่แย่ที่สุดของรอบ น้ำหนักสูงสุด และแถบเตือนเมื่อเกินเกณฑ์')}
 </div>
-''', 'คลิปด้านขวา: ผลลัพธ์จริงของคลิปยกเร็ว 7 รอบ · ความเร็ว 37 เฟรมต่อวินาทีเมื่อปิดตารางเอียงในฉาก (CPU)', gap=32)
+</div>
+''', 'วิดีโอ: บันทึกหน้าจอแอปจริงกับคลิปของกลุ่ม เร่งความเร็วเล็กน้อย · ความเร็วสูงสุด 37 เฟรมต่อวินาทีเมื่อปิดตารางเอียงในฉาก (CPU)', gap=32)
 (SLIDES / 'demo.html').write_text(demo, encoding='utf-8', newline='\n')
 
 # ------------------------------------------------------------------ slide 13: limits (no next steps)
@@ -203,7 +207,7 @@ limits = section('limits', f'''
 {header('ข้อจำกัด', 'ใช้คัดกรองท่ายกได้ แต่ยังไม่ใช่เครื่องวัด', dark=True)}
 <div style="display:flex;gap:32px">
 {limit('ความลึกมาจากกล้องตัวเดียว', 'ระยะเอื้อมเพี้ยนเมื่อผู้ยกหันเข้ากล้อง และยังไม่ได้เทียบกับระยะที่วัดจริงบนพื้น')}
-{limit('ตัวนับรอบพลาด 4 จาก 25 คลิปของกลุ่มอื่น', 'นับการเดินเป็นการยก ตัดหนึ่งรอบเป็นสองเมื่อมือผ่านระดับเดิมกลางรอบ และข้ามรอบที่โมเดลไม่ยืนยัน')}
+{limit('ตัวนับรอบพลาด 4 จาก 25 คลิปทดสอบเพิ่มเติม', 'นับการเดินเป็นการยก ตัดหนึ่งรอบเป็นสองเมื่อมือผ่านระดับเดิมกลางรอบ และข้ามรอบที่โมเดลไม่ยืนยัน')}
 {limit('การเตือนบิดตัวยังเตือนผิด', 'จับคลิปบิดตัวได้ 11 จาก 13 แต่เตือนผิด 5 จาก 23 คลิปที่ไม่บิด และค่าปรับจากคลิปชุดเดียวกันนี้')}
 </div>
 <div style="display:flex;align-items:center;gap:32px;background:{AMBER};padding:32px 40px;border-radius:20px">

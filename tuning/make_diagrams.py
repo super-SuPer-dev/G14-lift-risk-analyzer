@@ -124,11 +124,11 @@ chart = f'''<svg aria-label="กราฟความสูงมือตลอ
 numbers = ''.join(label(str(r.lift), round(fx((r.start_s + r.end_s) / 2)) - 7, 14, ACCENT, 600) for r in lifts.itertuples())
 multi = section('multi', '', '', f'''
 <img src="/_blob/ebe4e8a1b226799171d5ba5db4eca405" alt="เฟรมจากคลิปยกหลายรอบ: ผู้ยกหันข้างให้กล้อง ถือกล่องระดับอก ตารางน้ำหนักไฮไลต์ช่อง 23 กิโลกรัม ตัวนับขึ้น 2 รอบ" style="position:absolute;right:128px;top:128px;width:450px;height:800px;object-fit:cover;border-radius:20px">
-{header('ทดสอบการยกหลายรอบ', 'นับถูกทั้งสองคลิป หลังเปลี่ยนตัวนับ', ';width:1130px')}
-<table style="font-size:28px;color:{INK};background:#FFFFFF;border:1px solid {LINE};border-radius:20px;width:1130px">
-<tr style="background:{INK}"><th style="width:34%;text-align:left;color:{PAPER};font-weight:600">คลิป</th><th style="width:20%;text-align:left;color:{PAPER};font-weight:600">ยกจริง</th><th style="width:23%;text-align:left;color:{PAPER};font-weight:600">ตัวนับเดิม</th><th style="width:23%;text-align:left;color:{PAPER};font-weight:600">ตัวนับใหม่</th></tr>
-<tr><td>ยกวางปกติ 67 วินาที</td><td>8 รอบ</td><td>10 รอบ</td><td><b>8 รอบ</b></td></tr>
-<tr><td>ยกวางเร็ว 30 วินาที</td><td>7 รอบ</td><td>4 รอบ</td><td><b>7 รอบ</b></td></tr>
+{header('ทดสอบการยกหลายรอบ', 'เปลี่ยนตัวนับ เป็นดูความสูงมือ', ';width:1130px')}
+<table style="font-size:26px;color:{INK};background:#FFFFFF;border:1px solid {LINE};border-radius:20px;width:1130px">
+<tr style="background:{INK}"><th style="width:15%;text-align:left;color:{PAPER};font-weight:600">ตัวนับ</th><th style="width:53%;text-align:left;color:{PAPER};font-weight:600">นับหนึ่งรอบเมื่อ</th><th style="width:16%;text-align:left;color:{PAPER};font-weight:600">คลิปปกติ ยกจริง 8</th><th style="width:16%;text-align:left;color:{PAPER};font-weight:600">คลิปเร็ว ยกจริง 7</th></tr>
+<tr><td>เดิม</td><td>โมเดลตอบว่ากำลังยก ถือ หรือวาง แล้วเลิกตอบ</td><td>10 รอบ</td><td>4 รอบ</td></tr>
+<tr><td><b>ใหม่</b></td><td>มือออกจากระดับยืนนิ่งเกิน 12 ซม. แล้วกลับมา และโมเดลยืนยันว่ามีของในมืออย่างน้อย 20% ของช่วงนั้น</td><td><b>8 รอบ</b></td><td><b>7 รอบ</b></td></tr>
 </table>
 <div style="position:relative;width:{W}px;height:{H}px;{CARD}">
 {chart}
@@ -136,8 +136,7 @@ multi = section('multi', '', '', f'''
 {label('ความสูงมือ คลิปยกปกติ', 30, 262, MUTED)}
 {label('แถบสี = รอบที่นับได้ · เส้นประ = ระดับยืนนิ่ง และเกณฑ์ +12 ซม.', 440, 262, MUTED)}
 </div>
-<p style="font-size:28px;line-height:1.4;color:{MUTED};width:1130px">ทั้งสองคลิป ทุกรอบยกได้ไม่เกิน <b>18 กก.</b> ตอนเอื้อมหยิบกล่อง และบิดตัวไม่เกิน 7°</p>
-''', 'ผู้ยกสูง 167 ซม. · ถ่ายด้านข้าง · ระยะกล้องที่คำนวณได้ 2.2 ม.', gap=28)
+''', 'ผู้ยกสูง 167 ซม. · ถ่ายด้านข้าง · ทั้งสองคลิปทุกรอบยกได้ไม่เกิน 18 กก. และบิดตัวไม่เกิน 7°', gap=28)
 (SLIDES / 'multi.html').write_text(multi, encoding='utf-8', newline='\n')
 
 # ------------------------------------------------------------------ slide 9: two ways of twisting, seen from above
@@ -180,7 +179,7 @@ def stat(value, text, dark=False, color=INK):
 
 
 others = section('others', '', '', f'''
-{header('ทดสอบกับคลิปของกลุ่มอื่น', 'นับรอบและโซนใช้ได้ มุมบิดตัวต้องเปลี่ยนวิธีวัด')}
+{header('ทดสอบกับคลิปทดสอบเพิ่มเติม', 'นับรอบและโซนใช้ได้ มุมบิดตัวต้องเปลี่ยนวิธีวัด')}
 <div style="display:flex;gap:24px">
 {stat('21 / 25', 'คลิปที่นับรอบถูก', dark=True)}
 {stat('20 / 20', 'โซนความสูงมือต้นทางถูก')}
@@ -192,6 +191,6 @@ others = section('others', '', '', f'''
 {panel('หมุนทั้งลำตัว', 'สะโพกหมุนตามไหล่ มุมไหล่เทียบสะโพกได้แค่ 9–18° แม้จะบิดจริง', 'ข้อ 2: แนวไหล่หมุนเทียบพื้นเกิน 50°',
        'มองจากด้านบน สะโพกและไหล่หมุนไปด้วยกันจากแนวเดิมที่เป็นเส้นประ', 40, 52, True)}
 </div>
-''', 'G01 20 คลิป + G20 5 คลิป · ตัวนับและโซนไม่ปรับค่าเพิ่ม · กฎบิดตัวปรับโดยใช้คลิปชุดนี้ด้วย · สีส้ม = แนวไหล่ สีเข้ม = แนวสะโพก', gap=28)
+''', 'คลิปทดสอบ 25 คลิปที่กลุ่มหามาเพิ่ม · ตัวนับและโซนไม่ปรับค่าเพิ่ม · กฎบิดตัวปรับโดยใช้คลิปชุดนี้ด้วย · สีส้ม = แนวไหล่ สีเข้ม = แนวสะโพก', gap=28)
 (SLIDES / 'others.html').write_text(others, encoding='utf-8', newline='\n')
 print('wrote geometry, multi, others')
