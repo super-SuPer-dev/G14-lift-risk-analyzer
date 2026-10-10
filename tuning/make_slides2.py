@@ -206,6 +206,10 @@ limits = section('limits', f'''
 {limit('ตัวนับรอบพลาด 4 จาก 25 คลิปของกลุ่มอื่น', 'นับการเดินเป็นการยก ตัดหนึ่งรอบเป็นสองเมื่อมือผ่านระดับเดิมกลางรอบ และข้ามรอบที่โมเดลไม่ยืนยัน')}
 {limit('การเตือนบิดตัวยังเตือนผิด', 'จับคลิปบิดตัวได้ 11 จาก 13 แต่เตือนผิด 5 จาก 23 คลิปที่ไม่บิด และค่าปรับจากคลิปชุดเดียวกันนี้')}
 </div>
+<div style="display:flex;align-items:center;gap:32px;background:{AMBER};padding:32px 40px;border-radius:20px">
+<h3 style="font-size:36px;font-weight:600;line-height:1.3;color:{INK}">โค้ดและผลการทดลอง</h3>
+<p style="flex:1;font-size:32px;font-weight:600;line-height:1.4;color:{INK}">github.com/super-SuPer-dev/G14-lift-risk-analyzer</p>
+</div>
 ''', 'G14 · Lift Risk Analyzer', gap=48, dark=True)
 (SLIDES / 'limits.html').write_text(limits, encoding='utf-8', newline='\n')
 
