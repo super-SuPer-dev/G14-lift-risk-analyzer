@@ -1,0 +1,2 @@
+lift,start_s,end_s,duration_s,V_start_cm,V_end_cm,V_min_cm,V_max_cm,H_max_cm,twist_max_deg,shoulder_swing_deg,worst_frame,worst_zone,limit_kg,twist_flag
+1,5.37,9.23,3.87,95.7,86.4,86.4,175.3,60.9,45.7,124.0,168,Above Shoulder | Extended,14,True

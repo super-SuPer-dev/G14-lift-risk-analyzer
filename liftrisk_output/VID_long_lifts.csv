@@ -1,0 +1,9 @@
+lift,start_s,end_s,duration_s,V_start_cm,V_end_cm,V_min_cm,V_max_cm,H_max_cm,twist_max_deg,shoulder_swing_deg,worst_frame,worst_zone,limit_kg,twist_flag
+1,4.7,6.77,2.07,96.9,89.5,89.5,106.6,40.4,6.1,19.7,141,Knee-Waist | Extended,18,False
+2,11.9,15.2,3.3,96.4,89.5,89.5,103.1,41.8,5.4,19.2,357,Knee-Waist | Extended,18,False
+3,20.13,24.97,4.83,97.5,89.8,89.8,129.5,60.0,6.7,14.4,604,Knee-Waist | Extended,18,False
+4,28.03,31.37,3.33,96.2,89.7,89.7,109.9,55.0,6.3,17.1,841,Knee-Waist | Extended,18,False
+5,36.77,40.13,3.37,97.2,89.7,89.7,106.7,40.5,5.3,19.5,1103,Knee-Waist | Extended,18,False
+6,45.73,48.77,3.03,96.6,89.5,89.5,109.5,41.5,5.0,20.6,1372,Knee-Waist | Extended,18,False
+7,53.97,57.17,3.2,96.7,89.6,89.6,111.1,43.7,4.5,10.2,1619,Knee-Waist | Extended,18,False
+8,61.93,65.4,3.47,96.3,89.8,89.8,107.0,47.9,6.0,17.0,1858,Knee-Waist | Extended,18,False

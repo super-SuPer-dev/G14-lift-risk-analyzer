@@ -1,0 +1,6 @@
+label,label_id
+idle,0
+reach/grasp,1
+lift,2
+lower/place,3
+carry/hold,4

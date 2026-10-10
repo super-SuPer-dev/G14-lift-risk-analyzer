@@ -1,0 +1,26 @@
+setting,value
+fps,30
+window,60
+train_stride,3
+min_valid_ratio,0.8
+min_confidence,0.5
+outlier_ratio,0.04
+min_outlier_px,25.0
+max_track_only,5
+history_frames,3
+ma_includes_current,True
+features_per_frame,166
+feature_groups,base:132 | velocity:20 | angle:14
+velocity_points,11 12 15 16 23 24 25 26 27 28
+angles,left_elbow:11-13-15 | right_elbow:12-14-16 | left_hip:11-23-25 | right_hip:12-24-26 | left_knee:23-25-27 | right_knee:24-26-28 | trunk:vertical
+mirror_train,True
+mirror_suffix,#mirror
+normalization,hip_center_and_torso_length_each_frame
+input_type,Workshop10_raw_csv_all_groups
+input_clips,390
+prepared_clips,368
+split_file,subject_splits_extra_train.csv
+opencv_version,5.0.0
+numpy_version,2.1.3
+pandas_version,2.2.3
+priority_from_Workshop10,lift > lower/place > reach/grasp > carry/hold > idle

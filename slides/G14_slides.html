@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>G14 Lift Risk Analyzer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { background: #2b2b2b; }
+section { position: relative; width: 1920px; height: 1080px; overflow: hidden; break-after: page; }
+h1 { font-size: 96px; font-weight: 600; line-height: 1.1; }
+h2 { font-size: 64px; font-weight: 600; line-height: 1.15; }
+h3 { font-size: 44px; font-weight: 600; line-height: 1.2; }
+p { font-size: 32px; font-weight: 400; line-height: 1.4; }
+img { display: block; }
+aside { display: none; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; }
+th, td { padding: 0.35em 0.6em; text-align: left; vertical-align: top; border-top: 1px solid #DAD6CB; }
+tr:first-child th, tr:first-child td { border-top: none; }
+x-connector { display: block; flex: none; position: relative; height: 24px; }
+x-connector::before { content: ""; position: absolute; left: 0; right: 10px; top: 10px; height: 4px; background: currentColor; }
+x-connector::after { content: ""; position: absolute; right: 0; top: 2px; border-left: 16px solid currentColor;
+                     border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+@page { size: 1920px 1080px; margin: 0; }
+@media screen { section { margin: 0 0 24px; } }
+@media print { html, body { zoom: 1 !important; background: none; } }
+</style>
+</head>
+<body>
+<section id="cover" data-transition="fade" style="background:#152238;color:#F6F4EE;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between">
+<img src="img/00c7d260f7151c34a93e6bd3c029af3a.png" alt="เฟรมจากวิดีโอผลลัพธ์ มีโครงกระดูก ตารางน้ำหนัก และตัวนับรอบซ้อนบนผู้ยก" style="position:absolute;right:128px;top:96px;width:500px;height:888px;object-fit:cover;border-radius:20px">
+<p style="font-size:30px;font-weight:500;color:#F2A65A;letter-spacing:2px">AI WORKSHOP III · กลุ่ม G14</p>
+<div style="display:flex;flex-direction:column;gap:32px;width:1040px">
+<h1 style="font-family:'Kanit', Tahoma, sans-serif;font-size:112px;font-weight:600;line-height:1.1">Lift Risk Analyzer</h1>
+<p style="font-size:40px;line-height:1.5;color:#C9D3E0">วิเคราะห์ความเสี่ยงของการยกจากวิดีโอ: นับรอบการยก ระยะเอื้อม มุมบิดตัว และน้ำหนักสูงสุดที่ยอมรับได้</p>
+</div>
+<p style="font-size:24px;color:#8FA0B8">CP413705 การฝึกปฏิบัติงานปัญญาประดิษฐ์ 3 · วิทยาลัยการคอมพิวเตอร์ มหาวิทยาลัยขอนแก่น</p>
+<aside>[0:00–0:08 · ผู้พูด 1] สวัสดีครับ พวกเรากลุ่ม G14 นำเสนอ Lift Risk Analyzer ระบบวิเคราะห์ความเสี่ยงของการยกจากวิดีโอ</aside>
+</section>
+<section id="goal" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:64px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">โจทย์</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">จากวิดีโอการยกหนึ่งคลิป ระบบต้องตอบสามคำถาม</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFFFF;padding:48px;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:112px;font-weight:600;line-height:1;color:#C2570C">1</p>
+<h3 style="font-size:40px;font-weight:600;line-height:1.3">ยกไปกี่รอบ</h3>
+<p style="font-size:30px;line-height:1.5;color:#4A5568">นับจากความสูงมือ โดยให้โมเดลที่กลุ่มเทรนเองยืนยันว่ามีของในมือ</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFFFF;padding:48px;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:112px;font-weight:600;line-height:1;color:#C2570C">2</p>
+<h3 style="font-size:40px;font-weight:600;line-height:1.3">ท่ายกเป็นอย่างไร</h3>
+<p style="font-size:30px;line-height:1.5;color:#4A5568">มือสูงจากพื้นเท่าไร เอื้อมไกลจากข้อเท้าเท่าไร และลำตัวบิดกี่องศา</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFFFF;padding:48px;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:112px;font-weight:600;line-height:1;color:#C2570C">3</p>
+<h3 style="font-size:40px;font-weight:600;line-height:1.3">ยกได้ไม่เกินกี่กิโลกรัม</h3>
+<p style="font-size:30px;line-height:1.5;color:#4A5568">เทียบตำแหน่งมือกับตารางน้ำหนักสูงสุดที่ยอมรับได้ 3×4 ช่อง</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">G14 · Lift Risk Analyzer</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">2</p>
+<aside>[0:08–0:23 · ผู้พูด 1] จากวิดีโอหนึ่งคลิป ระบบตอบสามคำถาม หนึ่ง ยกไปกี่รอบ สอง ท่ายกเป็นอย่างไร คือมือสูงเท่าไร เอื้อมไกลแค่ไหน และบิดตัวหรือไม่ สาม ท่านั้นยกได้ไม่เกินกี่กิโลกรัม</aside>
+</section>
+<section id="pipeline" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">วิธีทำงาน</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">ทุกเฟรมผ่านสองเส้นทางพร้อมกัน</h2>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<div style="width:300px;display:flex;flex-direction:column;gap:12px;background:#152238;padding:36px;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3;color:#F6F4EE">จุดร่างกาย 33 จุด</h3>
+<p style="font-size:24px;line-height:1.5;color:#C9D3E0">MediaPipe แล้วลดการสั่นด้วย Kalman</p>
+</div>
+<x-connector head="end" style="width:64px;color:#152238;border-width:4px"></x-connector>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;align-items:center;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">เรขาคณิต 3 มิติ</h3>
+<p style="font-size:24px;line-height:1.5;color:#4A5568">สูตรคำนวณ ไม่มีการเทรน ใช้ส่วนสูงผู้ยกตั้งสเกล</p>
+</div>
+<x-connector head="end" style="width:64px;color:#152238;border-width:4px"></x-connector>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">ระยะเอื้อม มุมบิด น้ำหนัก</h3>
+<p style="font-size:24px;line-height:1.5;color:#4A5568">ตำแหน่งมือแบบ NIOSH และตาราง 3×4</p>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">โมเดล Transformer ของกลุ่ม</h3>
+<p style="font-size:24px;line-height:1.5;color:#4A5568">เทรนจากคลิปของทุกกลุ่ม ดู 60 เฟรมล่าสุด</p>
+</div>
+<x-connector head="end" style="width:64px;color:#152238;border-width:4px"></x-connector>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">มีของอยู่ในมือหรือไม่</h3>
+<p style="font-size:24px;line-height:1.5;color:#4A5568">กิจกรรม 5 แบบ โหวตจาก 9 เฟรม</p>
+</div>
+</div>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.5;color:#4A5568">นับรอบเมื่อมือขยับออกจากระดับยืนนิ่งและโมเดลยืนยัน แล้วสรุป <b>หนึ่งแถวต่อหนึ่งรอบ</b> ด้วยท่าที่แย่ที่สุดของรอบ</p>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">G14 · Lift Risk Analyzer</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">3</p>
+<aside>[0:23–0:40 · ผู้พูด 1] ทุกเฟรม MediaPipe หาจุดร่างกายสามสิบสามจุด แล้วส่งไปสองเส้นทาง เส้นทางแรกเป็นสูตรเรขาคณิต ใช้วัดท่ายก เส้นทางที่สองเป็นโมเดลที่กลุ่มเราเทรนเอง ใช้บอกกิจกรรม แล้วนำผลทั้งสองมานับรอบร่วมกัน</aside>
+</section>
+<section id="geometry" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">การคำนวณ 1 · ความสูงมือและระยะเอื้อม</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">จากจุดในภาพ เป็นระยะจริงหน่วยเซนติเมตร</h2>
+</div>
+<div style="display:flex;align-items:stretch;gap:24px">
+<div style="position:relative;width:700px;height:560px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<svg aria-label="ภาพด้านข้างของคนถือกล่อง จุดอ้างอิง O อยู่ที่กึ่งกลางข้อเท้าบนพื้น V คือความสูงมือจากพื้น H คือระยะแนวราบจาก O ถึงมือ" width="700" height="560" viewBox="0 0 700 560">
+<line x1="30" y1="135" x2="500" y2="135" stroke="#9AA3AF" stroke-width="2" stroke-dasharray="10 8"/>
+<line x1="30" y1="245" x2="500" y2="245" stroke="#9AA3AF" stroke-width="2" stroke-dasharray="10 8"/>
+<line x1="30" y1="345" x2="500" y2="345" stroke="#9AA3AF" stroke-width="2" stroke-dasharray="10 8"/>
+<line x1="30" y1="450" x2="670" y2="450" stroke="#152238" stroke-width="4"/>
+<rect x="385" y="180" width="90" height="64" rx="6" fill="#F2A65A" stroke="#152238" stroke-width="4"/>
+<polyline points="270,450 220,450 232,345 215,245 255,135 320,207 410,214" fill="none" stroke="#152238" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="275" cy="86" r="28" fill="#152238"/>
+<line x1="220" y1="458" x2="220" y2="500" stroke="#C2570C" stroke-width="2" stroke-dasharray="6 6"/>
+<line x1="430" y1="248" x2="430" y2="500" stroke="#C2570C" stroke-width="2" stroke-dasharray="6 6"/>
+<line x1="480" y1="212" x2="555" y2="212" stroke="#C2570C" stroke-width="2" stroke-dasharray="6 6"/>
+<line x1="220" y1="490" x2="430" y2="490" stroke="#C2570C" stroke-width="5"/><polygon points="430.0,490.0 413.8,497.8 413.8,482.2" fill="#C2570C"/><polygon points="220.0,490.0 236.2,482.2 236.2,497.8" fill="#C2570C"/>
+<line x1="540" y1="450" x2="540" y2="212" stroke="#C2570C" stroke-width="5"/><polygon points="540.0,212.0 547.8,228.2 532.2,228.2" fill="#C2570C"/><polygon points="540.0,450.0 532.2,433.8 547.8,433.8" fill="#C2570C"/>
+<circle cx="220" cy="450" r="11" fill="#C2570C" stroke="#FFFFFF" stroke-width="3"/>
+</svg>
+<p style="position:absolute;left:28px;top:99px;font-size:24px;font-weight:400;line-height:1.4;color:#4A5568">ไหล่</p>
+<p style="position:absolute;left:28px;top:209px;font-size:24px;font-weight:400;line-height:1.4;color:#4A5568">เอว</p>
+<p style="position:absolute;left:28px;top:309px;font-size:24px;font-weight:400;line-height:1.4;color:#4A5568">เข่า</p>
+<p style="position:absolute;left:176px;top:404px;font-size:28px;font-weight:400;line-height:1.4;color:#C2570C"><b>O</b></p>
+<p style="position:absolute;left:560px;top:290px;font-size:26px;font-weight:400;line-height:1.4;color:#C2570C;width:130px"><b>V</b> ความสูงมือ จากพื้น</p>
+<p style="position:absolute;left:220px;top:500px;font-size:26px;font-weight:400;line-height:1.4;color:#C2570C"><b>H</b> ระยะเอื้อม จาก O ถึงมือ</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:22px;padding:32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<div style="display:flex;gap:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:44px;font-weight:600;line-height:1.1;color:#C2570C;width:44px">1</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.3">แปลงพิกเซลเป็นเซนติเมตร</h3>
+<p style="font-size:26px;font-weight:600;line-height:1.4;color:#152238;background:#F6F4EE;padding:8px 16px;border-radius:10px">ซม. ต่อพิกเซล = (ส่วนสูง × 0.905) ÷ ระยะพื้นถึงจมูกในภาพ</p>
+<p style="font-size:24px;line-height:1.4;color:#4A5568">วัดตอนยืนตรง 1.5 วินาทีแรก · 0.905 คือสัดส่วนความสูงจมูกต่อส่วนสูง</p>
+</div>
+</div>
+<div style="display:flex;gap:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:44px;font-weight:600;line-height:1.1;color:#C2570C;width:44px">2</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.3">หาพิกัด 3 มิติของทุกจุด</h3>
+<p style="font-size:26px;font-weight:600;line-height:1.4;color:#152238;background:#F6F4EE;padding:8px 16px;border-radius:10px">หาตำแหน่งกล้องที่ทำให้โครงร่าง 3 มิติฉายลงภาพแล้วตรงกับจุดในภาพ</p>
+<p style="font-size:24px;line-height:1.4;color:#4A5568">ใช้ solvePnP ของ OpenCV · ระยะโฟกัสคิดจากมุมมองกล้อง 70°</p>
+</div>
+</div>
+<div style="display:flex;gap:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:44px;font-weight:600;line-height:1.1;color:#C2570C;width:44px">3</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.3">วัดมือเทียบกับจุด O</h3>
+<p style="font-size:26px;font-weight:600;line-height:1.4;color:#152238;background:#F6F4EE;padding:8px 16px;border-radius:10px">V = ระยะแนวดิ่งจาก O ถึงมือ · H = √(ด้านหน้า² + ด้านข้าง²)</p>
+<p style="font-size:24px;line-height:1.4;color:#4A5568">O = กึ่งกลางข้อเท้าที่ระดับพื้น · มือ = ค่าเฉลี่ยข้อมือและโคนนิ้วของสองมือ</p>
+</div>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">นิยาม V และ H ตาม NIOSH Lifting Equation · สูตรจากไฟล์ตัวอย่างของอาจารย์</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">4</p>
+<aside>[0:40–1:12 · ผู้พูด 1] เริ่มจากการคำนวณความสูงมือและระยะเอื้อม มีสามขั้น ขั้นแรก ผู้ยกยืนตรงหนึ่งวินาทีครึ่ง เรารู้ว่าระยะจากพื้นถึงจมูกเท่ากับศูนย์จุดเก้าศูนย์ห้าของส่วนสูง จึงแปลงพิกเซลเป็นเซนติเมตรได้ ขั้นที่สอง หาตำแหน่งกล้องจากจุดร่างกาย เพื่อให้ได้พิกัดสามมิติของทุกจุด ขั้นที่สาม ตั้งจุดอ้างอิงที่กึ่งกลางข้อเท้าบนพื้น แล้ววัดมือเทียบกับจุดนี้ ระยะในแนวดิ่งคือค่า V ระยะในแนวราบคือค่า H ตามนิยามของ NIOSH</aside>
+</section>
+<section id="weight" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">การคำนวณ 2 · มุมบิดตัวและน้ำหนักสูงสุด</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">เทียบมุมกับเกณฑ์ และอ่านน้ำหนักจากตาราง</h2>
+</div>
+<div style="display:flex;align-items:stretch;gap:24px">
+<div style="width:760px;display:flex;flex-direction:column;gap:14px;padding:28px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<div style="display:flex;align-items:center;gap:16px">
+<div style="position:relative;width:330px;height:250px">
+<svg aria-label="ภาพมองจากด้านบน แนวไหล่หมุนไปจากแนวสะโพก มุมระหว่างสองแนวคือมุมบิดตัว" width="330" height="250" viewBox="0 0 330 250">
+<line x1="75" y1="130" x2="255" y2="130" stroke="#152238" stroke-width="26" stroke-linecap="round"/>
+<line x1="58.5" y1="204.6" x2="271.5" y2="55.4" stroke="#C2570C" stroke-width="22" stroke-linecap="round"/>
+<circle cx="165" cy="130" r="34" fill="#F6F4EE" stroke="#152238" stroke-width="6"/>
+<path d="M 287 130 A 122 122 0 0 0 264.9 60" fill="none" stroke="#152238" stroke-width="4"/>
+</svg>
+<p style="position:absolute;left:196px;top:8px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">แนวไหล่</p>
+<p style="position:absolute;left:196px;top:150px;font-size:24px;font-weight:600;line-height:1.4;color:#152238">แนวสะโพก</p>
+</div>
+<p style="flex:1;font-size:24px;line-height:1.45;color:#4A5568">มองจากด้านบน มุมระหว่างแนวไหล่กับแนวสะโพก คือการบิดของลำตัว</p>
+</div>
+<p style="font-size:26px;line-height:1.4"><b>ข้อ 1</b> มุมไหล่เทียบสะโพก − ค่าตอนยืนตรง <b>เกิน 17°</b></p>
+<p style="font-size:26px;line-height:1.4"><b>ข้อ 2</b> แนวไหล่หมุนเทียบกับพื้นภายในหนึ่งรอบ <b>เกิน 50°</b></p>
+<p style="font-size:26px;font-weight:600;line-height:1.4;color:#C2570C">เข้าข้อใดข้อหนึ่ง = เตือนบิดตัวในรอบนั้น</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;padding:28px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:28px;font-weight:600;line-height:1.3">น้ำหนักสูงสุดที่ยอมรับได้ (กก.)</h3>
+<table style="font-size:26px;color:#152238;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:14px">
+<tr style="background:#152238"><th style="width:34%;text-align:left;color:#F6F4EE;font-weight:600">ความสูงมือ V</th><th style="width:22%;text-align:left;color:#F6F4EE;font-weight:600">H ไม่ถึง 18</th><th style="width:22%;text-align:left;color:#F6F4EE;font-weight:600">18 ถึง 30</th><th style="width:22%;text-align:left;color:#F6F4EE;font-weight:600">เกิน 30 ซม.</th></tr>
+<tr><td>เหนือไหล่</td><td>29</td><td>18</td><td>14</td></tr>
+<tr><td>เอวถึงไหล่</td><td>32</td><td>23</td><td>18</td></tr>
+<tr><td>เข่าถึงเอว</td><td>41</td><td>25</td><td>18</td></tr>
+<tr><td>ต่ำกว่าเข่า</td><td>31</td><td>23</td><td>16</td></tr>
+</table>
+<p style="font-size:24px;line-height:1.45;color:#4A5568">แถว: เทียบ V กับระดับเข่า เอว ไหล่ ของผู้ยกเองที่วัดตอนยืนตรง โดยเอว = สะโพก + 0.30 × (ไหล่ − สะโพก)</p>
+<p style="font-size:24px;line-height:1.45;color:#4A5568">คอลัมน์: แบ่งค่า H ที่ 7 และ 12 นิ้ว (18 และ 30 ซม.)</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">ตารางจากไฟล์ตัวอย่างของอาจารย์ ตัวเลขตรงกับ Lifting Calculator ของรัฐวอชิงตัน (หน่วยปอนด์ แปลงเป็นกิโลกรัม) · ข้อ 2 กลุ่มเพิ่มเอง</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">5</p>
+<aside>[1:12–1:44 · ผู้พูด 2] ต่อมาคือมุมบิดตัว เราวัดมุมระหว่างแนวไหล่กับแนวสะโพก แล้วลบค่าตอนยืนตรงออก และวัดเพิ่มว่าแนวไหล่หมุนเทียบกับพื้นไปกี่องศาในหนึ่งรอบ ถ้าข้อแรกเกินสิบเจ็ดองศา หรือข้อที่สองเกินห้าสิบองศา ระบบจะเตือน ส่วนน้ำหนักสูงสุด นำค่า V ไปเทียบกับระดับเข่า เอว และไหล่ของผู้ยกเอง ได้สี่แถว นำค่า H ไปแบ่งที่สิบแปดและสามสิบเซนติเมตร ได้สามคอลัมน์ แล้วอ่านค่าจากตาราง ตัวเลขในตารางตรงกับตารางของรัฐวอชิงตัน</aside>
+</section>
+<section id="model" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">เส้นทางที่ 2 · โมเดลของกลุ่ม</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">โมเดลดูตัวเลขจากจุดร่างกาย ไม่ได้ดูภาพ</h2>
+</div>
+<div style="display:flex;align-items:center;gap:20px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#152238;padding:32px;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3;color:#F2A65A">166 ค่าต่อเฟรม</h3>
+<p style="font-size:24px;line-height:1.45;color:#F6F4EE"><b>132</b> ตำแหน่งและความมั่นใจของ 33 จุด</p>
+<p style="font-size:24px;line-height:1.45;color:#F6F4EE"><b>20</b> ความเร็วของ 10 จุด: ไหล่ ข้อมือ สะโพก เข่า ข้อเท้า</p>
+<p style="font-size:24px;line-height:1.45;color:#F6F4EE"><b>14</b> มุมข้อศอก สะโพก เข่า ลำตัว และอัตราการเปลี่ยน</p>
+</div>
+<x-connector head="end" style="width:48px;color:#152238;border-width:4px"></x-connector>
+<div style="width:270px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">60 เฟรมล่าสุด</h3>
+<p style="font-size:24px;line-height:1.45;color:#4A5568">เท่ากับ 2 วินาที เลื่อนไปทีละเฟรม</p>
+</div>
+<x-connector head="end" style="width:48px;color:#152238;border-width:4px"></x-connector>
+<div style="width:290px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">Transformer 2 ชั้น</h3>
+<p style="font-size:24px;line-height:1.45;color:#4A5568">ขนาด 64 พารามิเตอร์ราว 84,000 ตัว</p>
+</div>
+<x-connector head="end" style="width:48px;color:#152238;border-width:4px"></x-connector>
+<div style="width:300px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">กิจกรรม 5 แบบ</h3>
+<p style="font-size:24px;line-height:1.45;color:#4A5568">ยืนเฉย · เอื้อมจับ · <b>ยก · วาง · ถือ</b></p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:30px;font-weight:600;line-height:1.3">เทรนจากอะไร แม่นแค่ไหน</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">325 คลิปของทุกกลุ่ม แบ่งตามตัวบุคคล เพิ่มสำเนากลับซ้ายขวา · ชุดทดสอบถูก 45% (macro-F1 0.43)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;padding:32px;border:1px solid #DAD6CB;border-radius:20px">
+<h3 style="font-size:30px;font-weight:600;line-height:1.3">พารามิเตอร์ได้จากไหน</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">ทดลอง 5 แบบ (LSTM, GRU, Transformer) เลือกแบบที่คะแนนชุดตรวจสอบสูงสุด: ขนาด 64, 2 ชั้น, dropout 0.3, อัตราเรียนรู้ 0.001</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#F2A65A;padding:32px;border-radius:20px">
+<h3 style="font-size:30px;font-weight:600;line-height:1.3;color:#152238">จึงใช้แค่ยืนยัน</h3>
+<p style="font-size:26px;line-height:1.45;color:#152238">ถ้าตอบ ยก วาง หรือถือ ถือว่ามีของในมือ ไม่ใช้นับรอบโดยตรง</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">ตำแหน่งจุดปรับให้สะโพกเป็นศูนย์กลางและหารด้วยความยาวลำตัว · โมเดลจาก Workshop 12 ของกลุ่ม</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">6</p>
+<aside>[1:44–2:19 · ผู้พูด 2] เส้นทางที่สองคือโมเดล โมเดลไม่ได้ดูภาพ แต่ดูตัวเลขเฟรมละร้อยหกสิบหกค่า คือตำแหน่งของสามสิบสามจุด ความเร็วของสิบจุดสำคัญ และมุมข้อต่อ โมเดลรับหกสิบเฟรมล่าสุดเข้า Transformer สองชั้น แล้วตอบกิจกรรมห้าแบบ ค่าพารามิเตอร์ได้จากการทดลองห้าแบบใน Workshop 12 โดยเลือกแบบที่คะแนนชุดตรวจสอบดีที่สุด เทรนจากสามร้อยยี่สิบห้าคลิปของทุกกลุ่ม ถูกสี่สิบห้าเปอร์เซ็นต์ เราจึงใช้โมเดลแค่ยืนยันว่ามีของอยู่ในมือ</aside>
+</section>
+<section id="tuning" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">ค่าตั้งต้นและที่มา</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">คงไว้ 4 ค่า ปรับ 4 ค่า จากการทดลองกับคลิปจริง</h2>
+</div>
+<table style="font-size:24px;color:#152238;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<tr style="background:#152238"><th style="width:25%;text-align:left;color:#F6F4EE;font-weight:600">ค่า</th><th style="width:19%;text-align:left;color:#F6F4EE;font-weight:600">ค่าตั้งต้น</th><th style="width:20%;text-align:left;color:#F6F4EE;font-weight:600">ที่มา</th><th style="width:36%;text-align:left;color:#F6F4EE;font-weight:600">ค่าที่กลุ่มใช้ และผล</th></tr>
+<tr><td>สัดส่วนพื้นถึงจมูกต่อส่วนสูง</td><td>0.905</td><td>ไฟล์ตัวอย่างของอาจารย์</td><td>คงเดิม</td></tr><tr><td>ช่วงยืนตรงเพื่อตั้งสเกล</td><td>1.5 วินาที</td><td>ไฟล์ตัวอย่างของอาจารย์</td><td>คงเดิม</td></tr><tr><td>มุมมองกล้อง</td><td>70°</td><td>กล้องมือถือทั่วไป 65–75°</td><td>คงเดิม ลอง 50–110° ผลแทบไม่เปลี่ยน</td></tr><tr><td>ตำแหน่งเอว ระหว่างสะโพกกับไหล่</td><td>0.30</td><td>ไฟล์ตัวอย่างของอาจารย์</td><td>คงเดิม โซนต้นทางถูก 16 จาก 16 คลิป</td></tr><tr><td>ระยะเอื้อมที่ยอมรับ</td><td>ไม่จำกัด</td><td>ไฟล์ตัวอย่างของอาจารย์</td><td><b>ตัดเฟรมที่เกิน 50% ของส่วนสูง</b></td></tr><tr><td>เกณฑ์เตือนบิดตัว</td><td>45°</td><td>ไฟล์ตัวอย่างของอาจารย์</td><td><b>17° หรือแนวไหล่หมุน 50°</b> จับได้ 1 → 11 จาก 13</td></tr><tr><td>ตัวนับรอบ</td><td>ป้าย "ยก" ติดกัน 6 เฟรม</td><td>ไฟล์ตัวอย่างของอาจารย์</td><td><b>มือห่างระดับยืนนิ่ง 12 ซม. + โมเดลยืนยัน 20%</b> ถูก 10 จาก 20 → 22 จาก 22</td></tr><tr><td>โมเดลกิจกรรม</td><td>LSTM 30 เฟรม 132 ค่า</td><td>ค่าเดิมของ Workshop 12</td><td><b>Transformer 60 เฟรม 166 ค่า</b> คะแนน 0.35 → 0.42</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">ทดลองกับ 22 คลิปของกลุ่ม (20 คลิปเดิม + 2 คลิปยกหลายรอบ) · เกณฑ์บิดตัวใช้ 36 คลิป รวมของกลุ่มอื่น · คะแนนโมเดล = macro-F1 ชุดตรวจสอบ</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">7</p>
+<aside>[2:19–2:46 · ผู้พูด 2] นี่คือค่าตั้งต้นทั้งหมดและที่มา ส่วนใหญ่มาจากไฟล์ตัวอย่างของอาจารย์ เราคงไว้สี่ค่า เพราะทดลองแล้วผลไม่ต่าง เช่น มุมมองกล้องเจ็ดสิบองศา ค่าที่เราปรับมีสี่อย่าง คือระยะเอื้อมที่ยอมรับ เกณฑ์บิดตัว ตัวนับรอบ ซึ่งเปลี่ยนจากป้ายของโมเดลเป็นความสูงมือ ทำให้นับถูกจากสิบเป็นยี่สิบสองคลิป และโมเดลที่เปลี่ยนเป็น Transformer</aside>
+</section>
+<section id="result" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<img src="img/b04d6c7c01d935e067a407bf470825cd.png" alt="เฟรมผลลัพธ์ของคลิป AS-WS ในท่าที่แย่ที่สุดของรอบ: มืออยู่เหนือไหล่และเอื้อมไกล ป้ายและตารางไฮไลต์ช่อง 14 กิโลกรัม" style="position:absolute;right:128px;top:128px;width:450px;height:800px;object-fit:cover;border-radius:20px">
+<div style="display:flex;flex-direction:column;gap:16px;width:1130px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">ผลกับคลิปของกลุ่ม</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">คลิปยกจากเหนือไหล่ลงมาระดับเอว แบบบิดตัว</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;width:1130px">
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFFFF;padding:36px;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:88px;font-weight:600;line-height:1.1">1 รอบ</p>
+<p style="font-size:30px;line-height:1.4;color:#4A5568">นับได้ตรงกับที่ยกจริง</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFFFF;padding:36px;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:88px;font-weight:600;line-height:1.1">175 → 86</p>
+<p style="font-size:30px;line-height:1.4;color:#4A5568">ซม. · มือสูงสุด ถึงจุดวาง</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFFFF;padding:36px;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:88px;font-weight:600;line-height:1.1;color:#B4281E">46°</p>
+<p style="font-size:30px;line-height:1.4;color:#4A5568">บิดตัวสูงสุด เกินเกณฑ์ 17°</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#152238;padding:36px;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:88px;font-weight:600;line-height:1.1;color:#F2A65A">14 กก.</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E0">ยกได้ไม่เกิน ในท่าที่แย่ที่สุด</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">คลิป G14_S03_AS-WS_RF_T1 · ผู้ยกสูง 167 ซม.</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">8</p>
+<aside>[2:46–3:04 · ผู้พูด 3] ผลกับคลิปของกลุ่ม ยกจากเหนือไหล่ลงมาระดับเอวแบบบิดตัว ระบบนับได้หนึ่งรอบ มือสูงสุดร้อยเจ็ดสิบห้าเซนติเมตร วางที่แปดสิบหก มุมบิดสี่สิบหกองศาจึงเตือน และท่าที่แย่ที่สุดยกได้ไม่เกินสิบสี่กิโลกรัม</aside>
+</section>
+<section id="multi" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<img src="img/ebe4e8a1b226799171d5ba5db4eca405.png" alt="เฟรมจากคลิปยกหลายรอบ: ผู้ยกหันข้างให้กล้อง ถือกล่องระดับอก ตารางน้ำหนักไฮไลต์ช่อง 23 กิโลกรัม ตัวนับขึ้น 2 รอบ" style="position:absolute;right:128px;top:128px;width:450px;height:800px;object-fit:cover;border-radius:20px">
+<div style="display:flex;flex-direction:column;gap:16px;width:1130px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">ทดสอบการยกหลายรอบ</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">นับถูกทั้งสองคลิป หลังเปลี่ยนตัวนับ</h2>
+</div>
+<table style="font-size:28px;color:#152238;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px;width:1130px">
+<tr style="background:#152238"><th style="width:34%;text-align:left;color:#F6F4EE;font-weight:600">คลิป</th><th style="width:20%;text-align:left;color:#F6F4EE;font-weight:600">ยกจริง</th><th style="width:23%;text-align:left;color:#F6F4EE;font-weight:600">ตัวนับเดิม</th><th style="width:23%;text-align:left;color:#F6F4EE;font-weight:600">ตัวนับใหม่</th></tr>
+<tr><td>ยกวางปกติ 67 วินาที</td><td>8 รอบ</td><td>10 รอบ</td><td><b>8 รอบ</b></td></tr>
+<tr><td>ยกวางเร็ว 30 วินาที</td><td>7 รอบ</td><td>4 รอบ</td><td><b>7 รอบ</b></td></tr>
+</table>
+<div style="position:relative;width:1130px;height:300px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<svg aria-label="กราฟความสูงมือตลอดคลิปยกปกติ มีแปดช่วงที่มือสูงขึ้นจากระดับยืนนิ่ง ตรงกับแปดรอบที่ระบบนับได้" width="1130" height="300" viewBox="0 0 1130 300">
+<rect x="104.6" y="56" width="32.8" height="206" fill="#F2A65A" opacity="0.4"/><rect x="218.8" y="56" width="52.4" height="206" fill="#F2A65A" opacity="0.4"/><rect x="349.4" y="56" width="76.8" height="206" fill="#F2A65A" opacity="0.4"/><rect x="474.8" y="56" width="53.0" height="206" fill="#F2A65A" opacity="0.4"/><rect x="613.4" y="56" width="53.3" height="206" fill="#F2A65A" opacity="0.4"/><rect x="755.6" y="56" width="48.2" height="206" fill="#F2A65A" opacity="0.4"/><rect x="886.4" y="56" width="50.8" height="206" fill="#F2A65A" opacity="0.4"/><rect x="1012.7" y="56" width="55.1" height="206" fill="#F2A65A" opacity="0.4"/>
+<line x1="30" y1="216.9" x2="1100" y2="216.9" stroke="#9AA3AF" stroke-width="2" stroke-dasharray="10 8"/>
+<line x1="30" y1="178.9" x2="1100" y2="178.9" stroke="#C2570C" stroke-width="2" stroke-dasharray="4 8"/>
+<polyline points="54.3,216.8 55.9,216.8 57.5,216.8 59.1,217.6 60.7,219.3 62.3,218.7 63.9,216.2 65.4,215.5 67.0,216.5 68.6,216.7 70.2,216.5 71.8,216.3 73.4,216.0 75.0,215.5 76.5,216.8 78.1,219.0 79.7,220.0 81.3,219.7 82.9,210.6 84.5,212.9 86.1,220.0 87.7,221.9 89.2,222.7 90.8,222.0 92.4,220.5 94.0,220.4 95.6,218.2 97.2,217.3 98.8,212.9 100.3,203.0 101.9,192.6 103.5,182.2 105.1,174.3 106.7,165.8 108.3,161.4 109.9,159.2 111.5,155.1 113.0,149.5 114.6,146.9 116.2,146.7 117.8,148.1 119.4,152.0 121.0,153.7 122.6,155.8 124.1,161.6 125.7,161.7 127.3,161.0 128.9,161.8 130.5,162.3 132.1,174.1 133.7,182.7 135.3,187.5 136.8,197.1 138.4,205.7 140.0,215.9 141.6,223.2 143.2,226.2 144.8,228.0 146.4,227.7 147.9,227.5 149.5,220.5 151.1,209.3 152.7,205.0 154.3,202.4 155.9,202.4 157.5,207.6 159.1,213.4 160.6,216.0 162.2,216.4 163.8,218.2 165.4,219.6 167.0,219.7 168.6,218.8 170.2,217.4 171.7,217.0 173.3,215.9 174.9,216.0 176.5,217.0 178.1,217.3 179.7,218.0 181.3,216.1 182.9,214.9 184.4,214.6 186.0,213.3 187.6,213.1 189.2,213.0 190.8,214.3 192.4,217.4 194.0,218.1 195.6,211.7 197.1,209.9 198.7,214.9 200.3,220.8 201.9,227.1 203.5,233.4 205.1,239.9 206.7,243.4 208.2,244.1 209.8,241.6 211.4,231.5 213.0,217.4 214.6,204.4 216.2,192.9 217.8,184.2 219.4,175.2 220.9,166.5 222.5,160.2 224.1,157.6 225.7,157.8 227.3,159.9 228.9,163.6 230.5,165.1 232.0,165.1 233.6,164.8 235.2,163.2 236.8,162.4 238.4,163.4 240.0,162.9 241.6,163.0 243.2,163.6 244.7,162.9 246.3,161.2 247.9,161.2 249.5,161.2 251.1,161.0 252.7,161.1 254.3,163.3 255.8,164.5 257.4,164.5 259.0,164.9 260.6,165.0 262.2,165.9 263.8,169.1 265.4,175.2 267.0,184.4 268.5,187.5 270.1,189.8 271.7,206.1 273.3,218.7 274.9,225.5 276.5,230.7 278.1,234.1 279.6,236.2 281.2,236.2 282.8,235.0 284.4,229.3 286.0,223.4 287.6,217.4 289.2,211.2 290.8,209.7 292.3,211.4 293.9,213.7 295.5,214.0 297.1,213.5 298.7,213.6 300.3,213.6 301.9,212.5 303.5,211.0 305.0,210.3 306.6,209.7 308.2,210.3 309.8,211.7 311.4,211.6 313.0,211.7 314.6,212.1 316.1,212.5 317.7,213.8 319.3,216.4 320.9,217.4 322.5,210.8 324.1,202.3 325.7,191.3 327.3,181.8 328.8,179.7 330.4,185.5 332.0,195.5 333.6,200.4 335.2,204.7 336.8,205.7 338.4,205.0 339.9,203.5 341.5,201.7 343.1,199.7 344.7,198.9 346.3,198.8 347.9,192.0 349.5,175.0 351.1,161.5 352.6,145.5 354.2,128.1 355.8,110.0 357.4,95.4 359.0,88.2 360.6,80.4 362.2,74.4 363.7,75.9 365.3,77.8 366.9,78.4 368.5,78.1 370.1,75.8 371.7,75.3 373.3,77.1 374.9,78.4 376.4,78.4 378.0,78.2 379.6,78.0 381.2,78.8 382.8,80.6 384.4,81.5 386.0,80.9 387.5,80.5 389.1,81.8 390.7,82.4 392.3,82.9 393.9,86.2 395.5,91.2 397.1,101.2 398.7,113.4 400.2,123.2 401.8,138.4 403.4,152.5 405.0,158.9 406.6,164.6 408.2,169.5 409.8,178.2 411.3,185.8 412.9,192.1 414.5,193.1 416.1,191.3 417.7,186.8 419.3,181.1 420.9,176.8 422.5,178.5 424.0,186.3 425.6,195.9 427.2,206.8 428.8,213.1 430.4,215.0 432.0,215.9 433.6,216.5 435.2,216.3 436.7,214.4 438.3,212.9 439.9,212.6 441.5,212.9 443.1,213.4 444.7,214.2 446.3,214.7 447.8,213.7 449.4,208.8 451.0,203.1 452.6,200.6 454.2,194.5 455.8,190.6 457.4,190.3 459.0,194.9 460.5,203.4 462.1,210.9 463.7,214.9 465.3,216.0 466.9,215.7 468.5,212.2 470.1,208.4 471.6,199.8 473.2,189.1 474.8,178.9 476.4,169.3 478.0,161.9 479.6,153.7 481.2,147.9 482.8,145.6 484.3,143.9 485.9,142.7 487.5,139.4 489.1,137.9 490.7,137.3 492.3,137.0 493.9,136.6 495.4,136.6 497.0,136.3 498.6,136.2 500.2,137.3 501.8,137.0 503.4,136.1 505.0,136.4 506.6,138.1 508.1,140.9 509.7,141.7 511.3,141.4 512.9,141.7 514.5,144.1 516.1,146.1 517.7,147.4 519.2,157.3 520.8,166.7 522.4,176.7 524.0,189.0 525.6,191.5 527.2,196.6 528.8,205.2 530.4,211.4 531.9,214.4 533.5,213.9 535.1,210.6 536.7,206.0 538.3,202.0 539.9,195.6 541.5,184.8 543.0,182.4 544.6,188.0 546.2,194.6 547.8,200.3 549.4,204.5 551.0,210.0 552.6,213.3 554.2,214.3 555.7,215.0 557.3,214.8 558.9,213.6 560.5,212.8 562.1,211.8 563.7,211.8 565.3,212.0 566.9,212.6 568.4,212.5 570.0,211.9 571.6,211.5 573.2,211.8 574.8,212.1 576.4,212.1 578.0,211.8 579.5,212.1 581.1,213.2 582.7,213.4 584.3,212.9 585.9,212.3 587.5,212.6 589.1,212.8 590.7,214.3 592.2,215.2 593.8,214.2 595.4,214.6 597.0,217.2 598.6,217.6 600.2,218.7 601.8,220.6 603.3,222.1 604.9,222.0 606.5,220.4 608.1,213.6 609.7,203.5 611.3,193.0 612.9,180.4 614.5,168.7 616.0,160.4 617.6,155.7 619.2,152.8 620.8,151.7 622.4,152.7 624.0,153.5 625.6,152.6 627.1,149.9 628.7,148.8 630.3,148.5 631.9,148.4 633.5,146.6 635.1,146.6 636.7,148.5 638.3,148.1 639.8,146.5 641.4,146.9 643.0,148.9 644.6,149.3 646.2,150.8 647.8,152.2 649.4,152.3 650.9,153.4 652.5,153.5 654.1,154.0 655.7,155.9 657.3,156.6 658.9,156.1 660.5,157.7 662.1,166.3 663.6,175.9 665.2,185.6 666.8,199.7 668.4,208.4 670.0,217.2 671.6,226.7 673.2,229.4 674.8,229.2 676.3,227.2 677.9,223.2 679.5,217.4 681.1,207.8 682.7,196.4 684.3,191.3 685.9,188.9 687.4,189.7 689.0,191.7 690.6,193.5 692.2,198.3 693.8,205.5 695.4,208.3 697.0,209.9 698.6,210.3 700.1,211.7 701.7,212.9 703.3,212.7 704.9,212.5 706.5,211.4 708.1,210.6 709.7,210.9 711.2,211.5 712.8,210.7 714.4,210.8 716.0,211.9 717.6,213.0 719.2,213.6 720.8,213.9 722.4,213.8 723.9,213.6 725.5,213.7 727.1,212.7 728.7,211.5 730.3,213.6 731.9,215.3 733.5,216.0 735.0,217.8 736.6,216.6 738.2,217.5 739.8,220.1 741.4,219.9 743.0,222.1 744.6,225.8 746.2,226.3 747.7,222.7 749.3,216.9 750.9,209.6 752.5,200.9 754.1,188.3 755.7,177.6 757.3,167.3 758.8,156.9 760.4,149.4 762.0,147.6 763.6,146.4 765.2,147.1 766.8,147.5 768.4,146.0 770.0,144.4 771.5,144.4 773.1,143.2 774.7,143.2 776.3,144.1 777.9,142.0 779.5,141.9 781.1,142.5 782.6,142.4 784.2,138.4 785.8,138.8 787.4,141.0 789.0,140.4 790.6,143.1 792.2,148.5 793.8,155.4 795.3,164.2 796.9,174.4 798.5,177.9 800.1,178.9 801.7,184.7 803.3,196.6 804.9,206.2 806.5,215.5 808.0,221.3 809.6,223.4 811.2,222.7 812.8,222.5 814.4,221.4 816.0,218.9 817.6,214.1 819.1,208.9 820.7,202.3 822.3,198.6 823.9,198.9 825.5,202.9 827.1,207.8 828.7,209.7 830.3,209.2 831.8,209.2 833.4,208.5 835.0,208.2 836.6,205.0 838.2,203.7 839.8,204.0 841.4,205.9 842.9,207.2 844.5,208.4 846.1,210.3 847.7,212.4 849.3,214.6 850.9,213.2 852.5,211.0 854.1,210.3 855.6,208.7 857.2,208.0 858.8,210.0 860.4,210.9 862.0,211.1 863.6,212.4 865.2,212.4 866.7,215.2 868.3,218.6 869.9,220.8 871.5,227.6 873.1,231.5 874.7,233.1 876.3,233.7 877.9,232.2 879.4,228.2 881.0,220.2 882.6,210.2 884.2,201.5 885.8,184.2 887.4,167.7 889.0,158.5 890.5,146.3 892.1,136.3 893.7,136.5 895.3,137.4 896.9,136.2 898.5,134.1 900.1,132.8 901.7,134.2 903.2,134.9 904.8,132.8 906.4,132.8 908.0,133.7 909.6,134.4 911.2,137.4 912.8,138.2 914.3,138.6 915.9,136.3 917.5,138.0 919.1,136.8 920.7,136.8 922.3,140.0 923.9,139.5 925.5,139.4 927.0,140.0 928.6,143.8 930.2,150.9 931.8,158.7 933.4,168.4 935.0,179.8 936.6,194.8 938.2,209.9 939.7,219.4 941.3,222.2 942.9,222.2 944.5,221.5 946.1,219.9 947.7,217.7 949.3,214.0 950.8,210.0 952.4,205.9 954.0,196.9 955.6,191.5 957.2,191.5 958.8,197.2 960.4,204.4 962.0,210.9 963.5,213.4 965.1,213.4 966.7,212.9 968.3,211.5 969.9,210.5 971.5,209.7 973.1,209.2 974.6,208.7 976.2,207.3 977.8,207.0 979.4,207.6 981.0,208.2 982.6,208.7 984.2,208.8 985.8,210.4 987.3,214.3 988.9,217.5 990.5,216.3 992.1,213.5 993.7,210.6 995.3,207.6 996.9,204.6 998.4,206.4 1000.0,209.5 1001.6,214.1 1003.2,216.7 1004.8,217.9 1006.4,214.2 1008.0,207.9 1009.6,201.4 1011.1,192.1 1012.7,178.6 1014.3,167.1 1015.9,155.9 1017.5,147.9 1019.1,147.5 1020.7,150.9 1022.2,151.0 1023.8,149.7 1025.4,149.4 1027.0,148.1 1028.6,148.2 1030.2,149.0 1031.8,149.0 1033.4,148.7 1034.9,147.0 1036.5,146.9 1038.1,148.3 1039.7,150.1 1041.3,149.5 1042.9,147.9 1044.5,146.3 1046.1,146.7 1047.6,148.2 1049.2,151.0 1050.8,152.5 1052.4,151.0 1054.0,149.3 1055.6,147.4 1057.2,145.0 1058.7,145.2 1060.3,151.7 1061.9,164.8 1063.5,177.2 1065.1,184.0 1066.7,191.9 1068.3,202.2 1069.9,210.6 1071.4,218.5 1073.0,224.1 1074.6,225.7 1076.2,222.0 1077.8,213.4 1079.4,204.8 1081.0,197.3 1082.5,195.8 1084.1,195.8 1085.7,200.2 1087.3,204.0 1088.9,207.3 1090.5,210.3 1092.1,210.6 1093.7,209.6 1095.2,209.3 1096.8,209.6 1098.4,209.7 1100.0,209.4" fill="none" stroke="#152238" stroke-width="4" stroke-linejoin="round"/>
+</svg>
+<p style="position:absolute;left:114px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">1</p><p style="position:absolute;left:238px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">2</p><p style="position:absolute;left:381px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">3</p><p style="position:absolute;left:494px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">4</p><p style="position:absolute;left:633px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">5</p><p style="position:absolute;left:773px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">6</p><p style="position:absolute;left:905px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">7</p><p style="position:absolute;left:1033px;top:14px;font-size:24px;font-weight:600;line-height:1.4;color:#C2570C">8</p>
+<p style="position:absolute;left:30px;top:262px;font-size:24px;font-weight:400;line-height:1.4;color:#4A5568">ความสูงมือ คลิปยกปกติ</p>
+<p style="position:absolute;left:440px;top:262px;font-size:24px;font-weight:400;line-height:1.4;color:#4A5568">แถบสี = รอบที่นับได้ · เส้นประ = ระดับยืนนิ่ง และเกณฑ์ +12 ซม.</p>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5568;width:1130px">ทั้งสองคลิป ทุกรอบยกได้ไม่เกิน <b>18 กก.</b> ตอนเอื้อมหยิบกล่อง และบิดตัวไม่เกิน 7°</p>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">ผู้ยกสูง 167 ซม. · ถ่ายด้านข้าง · ระยะกล้องที่คำนวณได้ 2.2 ม.</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">9</p>
+<aside>[3:04–3:20 · ผู้พูด 3] คลิปยกหลายรอบที่ถ่ายใหม่ ยกจริงแปดและเจ็ดรอบ ตัวนับเดิมนับได้สิบกับสี่ ตัวนับใหม่นับถูกทั้งคู่ ในกราฟจะเห็นความสูงมือขึ้นแปดครั้ง ตรงกับแถบสีที่ระบบนับ</aside>
+</section>
+<section id="others" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">ทดสอบกับคลิปของกลุ่มอื่น</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">นับรอบและโซนใช้ได้ มุมบิดตัวต้องเปลี่ยนวิธีวัด</h2>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#152238;padding:26px 32px;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#F2A65A">21 / 25</p>
+<p style="font-size:26px;line-height:1.4;color:#C9D3E0">คลิปที่นับรอบถูก</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px;padding:26px 32px;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#152238">20 / 20</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">โซนความสูงมือต้นทางถูก</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px;padding:26px 32px;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#C2570C">1 → 7 / 9</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">คลิปบิดตัวที่จับได้ หลังใช้กฎสองข้อ</p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;align-items:center;gap:28px;padding:20px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<svg aria-label="มองจากด้านบน สะโพกอยู่แนวเดิม ไหล่หมุนไปสี่สิบองศา" width="320" height="290" viewBox="0 0 320 290">
+<rect x="108" y="106" width="30" height="64" rx="14" fill="#DAD6CB"/>
+<rect x="182" y="106" width="30" height="64" rx="14" fill="#DAD6CB"/>
+
+<line x1="82" y1="150" x2="238" y2="150" stroke="#152238" stroke-width="24" stroke-linecap="round" transform="rotate(0 160 150)"/>
+<line x1="48" y1="150" x2="272" y2="150" stroke="#C2570C" stroke-width="20" stroke-linecap="round" transform="rotate(-40 160 150)"/>
+<circle cx="160" cy="150" r="27" fill="#F6F4EE" stroke="#152238" stroke-width="6"/>
+<path d="M 260.0 150.0 A 100 100 0 0 0 236.6 85.7" fill="none" stroke="#152238" stroke-width="5"/>
+</svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px">
+<h3 style="font-size:34px;font-weight:600;line-height:1.3">บิดเฉพาะช่วงบน</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">สะโพกอยู่กับที่ ไหล่หมุนไป มุมไหล่เทียบสะโพกจึงสูง</p>
+<p style="font-size:26px;font-weight:600;line-height:1.45;color:#C2570C">ข้อ 1: ไหล่เทียบสะโพกเกิน 17°</p>
+</div>
+</div>
+<div style="flex:1;display:flex;align-items:center;gap:28px;padding:20px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<svg aria-label="มองจากด้านบน สะโพกและไหล่หมุนไปด้วยกันจากแนวเดิมที่เป็นเส้นประ" width="320" height="290" viewBox="0 0 320 290">
+<rect x="108" y="106" width="30" height="64" rx="14" fill="#DAD6CB"/>
+<rect x="182" y="106" width="30" height="64" rx="14" fill="#DAD6CB"/>
+<line x1="30" y1="150" x2="300" y2="150" stroke="#9AA3AF" stroke-width="3" stroke-dasharray="10 8"/>
+<line x1="82" y1="150" x2="238" y2="150" stroke="#152238" stroke-width="24" stroke-linecap="round" transform="rotate(-40 160 150)"/>
+<line x1="48" y1="150" x2="272" y2="150" stroke="#C2570C" stroke-width="20" stroke-linecap="round" transform="rotate(-52 160 150)"/>
+<circle cx="160" cy="150" r="27" fill="#F6F4EE" stroke="#152238" stroke-width="6"/>
+<path d="M 286.0 150.0 A 126 126 0 0 0 237.6 50.7" fill="none" stroke="#C2570C" stroke-width="5"/>
+</svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px">
+<h3 style="font-size:34px;font-weight:600;line-height:1.3">หมุนทั้งลำตัว</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">สะโพกหมุนตามไหล่ มุมไหล่เทียบสะโพกได้แค่ 9–18° แม้จะบิดจริง</p>
+<p style="font-size:26px;font-weight:600;line-height:1.45;color:#C2570C">ข้อ 2: แนวไหล่หมุนเทียบพื้นเกิน 50°</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">G01 20 คลิป + G20 5 คลิป · ตัวนับและโซนไม่ปรับค่าเพิ่ม · กฎบิดตัวปรับโดยใช้คลิปชุดนี้ด้วย · สีส้ม = แนวไหล่ สีเข้ม = แนวสะโพก</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">10</p>
+<aside>[3:20–3:45 · ผู้พูด 3] เราทดสอบกับคลิปของกลุ่มอื่นยี่สิบห้าคลิป นับรอบถูกยี่สิบเอ็ดคลิป แต่เกณฑ์บิดตัวเดิมจับได้แค่หนึ่งจากเก้า เพราะกลุ่มอื่นหมุนทั้งลำตัว สะโพกหมุนตามไหล่ เราจึงเพิ่มการวัดแนวไหล่เทียบกับพื้น ทำให้จับได้เจ็ดจากเก้าคลิป</aside>
+</section>
+<section id="app" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">ซอฟต์แวร์</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">เว็บแอปที่รันบนเครื่องตัวเอง (local)</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:flex-start">
+<img src="img/73fdab005252411599013380dc437f3b.png" alt="หน้าจอเว็บแอปหลังวิเคราะห์คลิปตัวอย่าง: นับได้ 1 รอบ น้ำหนักที่ยอมรับได้ต่ำสุด 14 กิโลกรัม มุมบิดตัว 46 องศา แถบเตือนสีแดง วิดีโอผลลัพธ์ และตารางสรุปรายรอบ" style="width:900px;height:578px;object-fit:contain;background:#0E1117;border-radius:20px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:36px;font-weight:600;line-height:1.3">ข้อมูลเข้า</h3>
+<p style="font-size:28px;line-height:1.5;color:#4A5568">ไฟล์วิดีโอหรือกล้องสด พร้อมส่วนสูงผู้ยกและน้ำหนักของที่ยก</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:36px;font-weight:600;line-height:1.3">ผลลัพธ์</h3>
+<p style="font-size:28px;line-height:1.5;color:#4A5568">วิดีโอ ตารางรายรอบ เส้นเวลา และคำเตือนเมื่อน้ำหนักหรือมุมบิดเกินเกณฑ์</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#152238;padding:32px;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#F2A65A">14 → 37</p>
+<p style="font-size:28px;line-height:1.5;color:#C9D3E0">เฟรมต่อวินาที เมื่อปิดตารางเอียงในฉาก จึงทันกล้อง 30 เฟรมต่อวินาที</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">ความเร็ววัดบนเครื่องของกลุ่ม ใช้ CPU · คลิป 720×1280</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">11</p>
+<aside>[3:45–4:02 · ผู้พูด 4] ส่วนซอฟต์แวร์ เราทำเป็นเว็บแอปที่รันบนเครื่องตัวเอง ผู้ใช้เลือกไฟล์วิดีโอหรือกล้องสด กรอกส่วนสูงและน้ำหนักของที่ยก แล้วได้วิดีโอ ตารางรายรอบ และคำเตือน</aside>
+</section>
+<section id="demo" data-transition="fade" style="background:#F6F4EE;color:#152238;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<img src="img/cd5bedfa8bc7415cdbb3476bf1a6f20a.png" data-video="img/acce233cd23ae69ecf17f2793204a0ad.mp4" alt="คลิปผลลัพธ์ของคลิปยกเร็ว: โครงร่างของผู้ยก ตารางน้ำหนัก และตัวนับรอบที่เพิ่มขึ้นทีละรอบ" style="position:absolute;right:128px;top:128px;width:450px;height:800px;object-fit:cover;border-radius:20px">
+<div style="display:flex;flex-direction:column;gap:16px;width:1130px">
+<p style="font-size:30px;font-weight:500;color:#C2570C">สาธิตการใช้งาน</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">จากคลิปหนึ่งคลิป ถึงผลสรุปรายรอบ</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;width:1130px">
+<div style="display:flex;gap:24px;padding:26px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:56px;font-weight:600;line-height:1;color:#C2570C;width:52px">1</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">เลือกคลิป กรอกส่วนสูงและน้ำหนักของที่ยก</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">ใช้ไฟล์วิดีโอ หรือกล้องสดของเครื่องก็ได้</p>
+</div>
+</div>
+<div style="display:flex;gap:24px;padding:26px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:56px;font-weight:600;line-height:1;color:#C2570C;width:52px">2</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">กดวิเคราะห์ แล้วดูภาพขณะประมวลผล</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">เห็นโครงร่าง ตารางน้ำหนัก และตัวนับที่ขึ้นเมื่อจบแต่ละรอบ</p>
+</div>
+</div>
+<div style="display:flex;gap:24px;padding:26px 32px;background:#FFFFFF;border:1px solid #DAD6CB;border-radius:20px">
+<p style="font-family:'Kanit', Tahoma, sans-serif;font-size:56px;font-weight:600;line-height:1;color:#C2570C;width:52px">3</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">อ่านผลสรุป หนึ่งแถวต่อหนึ่งรอบ</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">ท่าที่แย่ที่สุดของรอบ น้ำหนักสูงสุด และแถบเตือนเมื่อน้ำหนักหรือการบิดตัวเกินเกณฑ์</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#6B7280">คลิปด้านขวา: ผลลัพธ์จริงของคลิปยกเร็ว 7 รอบ · ความเร็ว 37 เฟรมต่อวินาทีเมื่อปิดตารางเอียงในฉาก (CPU)</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#6B7280">12</p>
+<aside>[4:02–4:32 · ผู้พูด 4] นี่คือการใช้งานจริง เลือกคลิป แล้วกดวิเคราะห์ ระหว่างประมวลผลจะเห็นโครงร่าง ตารางน้ำหนัก และตัวนับรอบที่ขึ้นทีละรอบ เมื่อจบจะได้ตารางสรุป หนึ่งแถวต่อหนึ่งรอบ พร้อมท่าที่แย่ที่สุดของรอบนั้น ถ้าน้ำหนักของที่ยก หรือการบิดตัวเกินเกณฑ์ แอปจะขึ้นแถบเตือนสีแดง ระบบทำงานได้สามสิบเจ็ดเฟรมต่อวินาที จึงใช้กับกล้องสดได้</aside>
+</section>
+<section id="limits" data-transition="fade" style="background:#152238;color:#F6F4EE;font-family:'IBM Plex Sans Thai', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:500;color:#F2A65A">ข้อจำกัด</p>
+<h2 style="font-family:'Kanit', Tahoma, sans-serif;font-size:64px;font-weight:600;line-height:1.2">ใช้คัดกรองท่ายกได้ แต่ยังไม่ใช่เครื่องวัด</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E3050;padding:40px;border-radius:20px">
+<h3 style="font-size:36px;font-weight:600;line-height:1.3">ความลึกมาจากกล้องตัวเดียว</h3>
+<p style="font-size:28px;line-height:1.5;color:#C9D3E0">ระยะเอื้อมเพี้ยนเมื่อผู้ยกหันเข้ากล้อง และยังไม่ได้เทียบกับระยะที่วัดจริงบนพื้น</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E3050;padding:40px;border-radius:20px">
+<h3 style="font-size:36px;font-weight:600;line-height:1.3">ตัวนับรอบพลาด 4 จาก 25 คลิปของกลุ่มอื่น</h3>
+<p style="font-size:28px;line-height:1.5;color:#C9D3E0">นับการเดินเป็นการยก ตัดหนึ่งรอบเป็นสองเมื่อมือผ่านระดับเดิมกลางรอบ และข้ามรอบที่โมเดลไม่ยืนยัน</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E3050;padding:40px;border-radius:20px">
+<h3 style="font-size:36px;font-weight:600;line-height:1.3">การเตือนบิดตัวยังเตือนผิด</h3>
+<p style="font-size:28px;line-height:1.5;color:#C9D3E0">จับคลิปบิดตัวได้ 11 จาก 13 แต่เตือนผิด 5 จาก 23 คลิปที่ไม่บิด และค่าปรับจากคลิปชุดเดียวกันนี้</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;font-size:24px;color:#8FA0B8">G14 · Lift Risk Analyzer</p>
+<p style="position:absolute;right:128px;bottom:64px;font-size:24px;color:#8FA0B8">13</p>
+<aside>[4:32–4:54 · ผู้พูด 4] ข้อจำกัดมีสามข้อ หนึ่ง ความลึกมาจากกล้องตัวเดียว และยังไม่ได้เทียบระยะเอื้อมกับของจริง สอง ตัวนับรอบพลาดเมื่อมีการเดิน สาม การเตือนบิดตัวยังเตือนผิดห้าจากยี่สิบสามคลิป ระบบนี้จึงเหมาะกับการคัดกรอง ยังไม่ใช่เครื่องวัด ขอบคุณครับ</aside>
+</section>
+<script>
+if (!matchMedia('print').matches) {
+  const fit = () => { document.body.style.zoom = Math.min(1, innerWidth / 1920); };
+  addEventListener('resize', fit); fit();
+}
+</script>
+</body>
+</html>

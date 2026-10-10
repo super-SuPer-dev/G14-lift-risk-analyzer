@@ -1,0 +1,6 @@
+streamlit
+mediapipe
+torch
+pandas
+numpy
+opencv-contrib-python-headless<5
